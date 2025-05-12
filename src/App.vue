@@ -5,7 +5,7 @@
 
 <template>
   HelloWorld
-  <!-- <RouterView /> -->
+  <RouterView />
 </template>
 
 <style scoped>
