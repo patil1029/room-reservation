@@ -6,6 +6,14 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      sass: {
+        api: 'modern-compiler', // or "modern", "legacy"
+        additionalData: '@import "@/assets/main.sass";',
+      },
+    },
+  },
   plugins: [
     vue(),
     vueDevTools(),
