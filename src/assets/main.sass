@@ -1,11 +1,37 @@
-@import "./variables.sass"
+@use './variables' as *
+
+@font-face
+  font-family: 'Open Sans Bold';
+  src: url('./fonts/OpenSans-Bold.ttf') format('ttf');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+
+@font-face
+  font-family: 'Open Sans Medium';
+  src: url('./fonts/OpenSans-Medium') format('ttf');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+
+@font-face
+  font-family: 'Open Sans Regular';
+  src: url('./fonts/OpenSans-Regular.ttf') format('ttf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 
 
-html 
+html
  /* Base styles go here */
  font: 14px/1.5 Arial, sans-serif;
+ font-family: 'Open Sans Regular'
+ box-sizing: border-box;
 
-body 
- padding: 0 20px;
- width: 920px;
- margin: 0 auto;
+body
+  margin: 0px
+  overflow: hidden
+
+.main
+  width: 100vw
+  height: 100vh
