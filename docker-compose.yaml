@@ -1,13 +1,13 @@
 version: '3.8'
 
 services:
-  vue-dev:
-    build: .
+  frontend:
+    image: node:20-alpine
     ports:
       - '5173:5173' # Vite dev server
     volumes:
       - .:/app # Bind mount your code
-      - /app/node_modules # Avoid host <-> container node_modules conflict
+    working_dir: /app
     environment:
       - NODE_ENV=development
     command: yarn dev --host

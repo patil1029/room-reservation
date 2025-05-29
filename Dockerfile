@@ -1,12 +1,12 @@
 # Use Node Alpine for a lightweight image
-FROM node:20.19-alpine
+FROM node:20.19-alpine 
 
 # Set working directory
 WORKDIR /app
 
 # Install dependencies (optional cache optimization)
 COPY package.json yarn.lock ./
-RUN yarn
+RUN yarn install
 
 # Copy source code (will be overwritten by volume in docker-compose)
 COPY . .

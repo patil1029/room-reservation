@@ -42,3 +42,17 @@ defineProps({
     <!-- <span v-if="error" class="error">{{ error }}</span> -->
   </div>
 </template>
+
+<style lang="sass" scoped>
+.input-box
+  display: flex
+  flex-direction: column
+  label
+    font-size: 16px
+    line-height: 1.7
+    color: $coolgrey
+  input
+    border: 1px solid $darkblue;
+    border-radius: 4px;
+    padding: 12px
+</style>
