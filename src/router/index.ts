@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DashboardView from '@/views/DashboardView.vue'
+import BookingsListing from '@/views/BookingsListing.vue'
 import { useUserStore } from '@/stores/userStore'
 
 const router = createRouter({
@@ -9,6 +10,14 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: DashboardView,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/bookings',
+      name: 'bookingslisting',
+      component: BookingsListing,
       meta: {
         requiresAuth: true
       }
