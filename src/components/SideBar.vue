@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import SmallLogo from './logos/SmallLogo.vue'
 import DashboardIcon from './icons/DashboardIcon.vue'
+import BookingsListingIcon from './icons/BookingsListingIcon.vue'
 </script>
 
 <template>
@@ -12,7 +13,9 @@ import DashboardIcon from './icons/DashboardIcon.vue'
           <i><DashboardIcon /></i>
           Dashboard</router-link
         >
-        <router-link to="/bookings">Bookings</router-link>
+        <router-link to="/bookings"
+          ><i><BookingsListingIcon /> </i> My Bookings</router-link
+        >
       </nav>
     </aside>
   </div>
@@ -36,7 +39,6 @@ import DashboardIcon from './icons/DashboardIcon.vue'
   display: flex;
   flex-direction: column;
   gap: 66px
-
 
   nav
     display: flex;
