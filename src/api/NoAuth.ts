@@ -1,16 +1,17 @@
 import { BaseApi } from './base'
 import router from '@/router'
-import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
+import type { AxiosError } from 'axios'
 import { useUserStore } from '@/stores/userStore'
-// import type { List, createListPayload, listContent, createListItem } from '@/types'
+import type { loginPayload, loginResponse, signupFirstStepResponse, singupFirstStep } from '@/types'
 
-class AuthApi extends BaseApi {
+class NoAuthApi extends BaseApi {
   public constructor() {
     super(import.meta.env.VITE_API_URL)
     this.instance.interceptors.response.use(this._handleResponse, this._handleError)
-    this.instance.interceptors.request.use(this._handleRequest)
   }
 
+  public login = (payload: loginPayload) => this.instance.post<loginResponse>('/auth/login', payload)
+  public signup = (payload: singupFirstStep) => this.instance.post<signupFirstStepResponse>('/auth/login', payload)
   // public getList = (): List | any => this.instance.get<List>('List')
   // public getListContent = (id: number): any => this.instance.get<listContent>(`List/${id}`)
   // public createList = (payload: createListPayload): any => this.instance.post<listContent>('List', payload)
@@ -20,12 +21,16 @@ class AuthApi extends BaseApi {
 
   protected _handleError = async (error: AxiosError) => {
     const config = error.config
+    const userStore = useUserStore()
     console.log(config)
     if (error.response) {
-      const { status } = error.response
+      const { status, data } = error.response
       switch (status) {
         // 500/404/403
         case 401:
+          userStore.loading = false
+          userStore.error = (data as { message?: string })?.message
+          console.log(error);
           return Promise.reject(error)
         default:
           router.push({ name: 'ErrorPage' })
@@ -41,16 +46,9 @@ class AuthApi extends BaseApi {
       return Promise.reject(error)
     }
   }
-  protected _handleRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const userStore = useUserStore()
-    if (config.headers) {
-      config.headers.set('Authorization', `Bearer ${userStore.accessToken}`)
-    }
-    return config
-  }
 }
 
 
-const authApi: AuthApi = new AuthApi()
+const noAuthApi: NoAuthApi = new NoAuthApi()
 
-export default authApi
+export default noAuthApi

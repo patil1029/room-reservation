@@ -47,6 +47,7 @@ defineProps({
 .input-box
   display: flex
   flex-direction: column
+  margin-bottom: 16px
   label
     font-size: 16px
     line-height: 1.7

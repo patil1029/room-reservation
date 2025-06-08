@@ -10,7 +10,6 @@ export abstract class BaseApi {
   public constructor(baseURL: string) {
     this.instance = axios.create({
       baseURL,
-
     })
   }
 
