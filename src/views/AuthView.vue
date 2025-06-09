@@ -2,6 +2,7 @@
 import InputBox from '@/components/InputBox.vue'
 import Button from '@/components/Button.vue'
 import RightSideImage from '@/assets/image.png'
+import RightSideSecondImage from '@/assets/right-side-second-image.png'
 import { ref } from 'vue'
 import LargeLogo from '@/components/logos/LargeLogo.vue'
 import OtpInput from '@/components/OtpInput.vue'
@@ -18,12 +19,14 @@ const props = defineProps({
 const userStore = useUserStore()
 
 const inputValues = ref({
+  fullName: '',
   email: '',
   password: '',
   confirmpassword: '',
 })
 
 const validationErrors = ref({
+  fullName: '',
   email: '',
   password: '',
   confirmPassword: '',
@@ -41,6 +44,7 @@ const handleInput = (event: Event) => {
 
 const validateForm = () => {
   // Reset all errors
+  validationErrors.value.fullName = ''
   validationErrors.value.email = ''
   validationErrors.value.password = ''
   validationErrors.value.confirmPassword = ''
@@ -50,8 +54,6 @@ const validateForm = () => {
   if (props.slug === 'login' || props.slug === 'signup') {
     // Email validation
     if (!inputValues.value.email.trim()) {
-      console.log(inputValues.value.email.trim())
-
       validationErrors.value.email = 'Email is required.'
       isValid = false
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inputValues.value.email)) {
@@ -69,9 +71,15 @@ const validateForm = () => {
     }
 
     if (props.slug === 'signup') {
+      //Full name validation
+      const words = inputValues.value.fullName.trim().split(/\s+/)
+      if (!inputValues.value.fullName.trim()) {
+        validationErrors.value.fullName = 'Full name is required.'
+        isValid = false
+      }
       // Confirm Password Validation
       if (!inputValues.value.confirmpassword.trim()) {
-        validationErrors.value.confirmPassword = 'Password is required.'
+        validationErrors.value.confirmPassword = 'Confirm Password is required.'
         isValid = false
       } else if (inputValues.value.password !== inputValues.value.confirmpassword) {
         validationErrors.value.password = 'Confirm-Password should match Password field.'
@@ -94,6 +102,7 @@ const validateForm = () => {
   if (!isValid) {
     setTimeout(() => {
       validationErrors.value = {
+        fullName: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -112,7 +121,7 @@ const handleSubmit = async () => {
       await userStore.login({ email: inputValues.value.email, password: inputValues.value.password })
     } else if (props.slug === 'signup') {
       await userStore.signupFirstStep({
-        fullname: 'sdad',
+        fullName: inputValues.value.fullName,
         email: inputValues.value.email,
         password: inputValues.value.password,
       })
@@ -128,7 +137,15 @@ const handleSubmit = async () => {
       <div class="input-boxes">
         <h1 v-if="slug === 'login'">Meeting Room Sign In</h1>
         <h1 v-if="slug === 'signup'">Meeting Room Sign Up</h1>
-        <div v-if="slug !== 'otp'">
+        <div v-if="slug !== 'otp' && slug !== 'two-fa'">
+          <InputBox
+            v-if="slug === 'signup'"
+            name="fullName"
+            label="Full Name"
+            type="text"
+            :model-value="inputValues.fullName"
+            @update="handleInput"
+          />
           <InputBox name="email" label="Email" type="email" :model-value="inputValues.email" @update="handleInput" />
           <InputBox
             name="password"
@@ -137,19 +154,26 @@ const handleSubmit = async () => {
             v-model="inputValues.password"
             @update="handleInput"
           />
+          <InputBox
+            v-if="slug !== 'login' && slug !== 'otp'"
+            name="confirmpassword"
+            label="Confirm-Password"
+            type="password"
+            v-model="inputValues.confirmpassword"
+            @update="handleInput"
+          />
         </div>
-        <InputBox
-          v-if="slug !== 'login' && slug !== 'otp'"
-          name="confirmpassword"
-          label="Confirm-Password"
-          type="password"
-          v-model="inputValues.confirmpassword"
-          @update="handleInput"
-        />
         <OtpInput v-if="slug === 'otp'" v-model="otpValue" />
         <RouterLink class="signup-link" v-if="slug === 'login'" to="/auth/signup">Create Account </RouterLink>
         <Button
           button-class="signup-btn"
+          label="Signup"
+          button-type="primary"
+          button-size="large"
+          @click="handleSubmit"
+        />
+        <Button
+          button-class="navigate-page-btn"
           label="Signup"
           button-type="primary"
           button-size="large"
@@ -166,6 +190,7 @@ const handleSubmit = async () => {
       </div>
       <div class="validation-errors">
         <span v-if="slug === 'login' || slug === 'signup'">
+          <p v-if="slug === 'signup'">{{ validationErrors.fullName }}</p>
           <p>{{ validationErrors.email }}</p>
           <p>{{ validationErrors.password }}</p>
           <p v-if="slug === 'signup'">{{ validationErrors.confirmPassword }}</p>
@@ -174,7 +199,11 @@ const handleSubmit = async () => {
       </div>
     </div>
     <div class="image">
-      <img :src="RightSideImage" :alt="slug + '-image'" />
+      <img
+        :class="slug + '-cover-image'"
+        :src="slug === 'otp' || slug === 'two-fa' ? RightSideSecondImage : RightSideImage"
+        :alt="slug + 'cover-image'"
+      />
     </div>
   </div>
 </template>
@@ -230,7 +259,11 @@ const handleSubmit = async () => {
     justify-content: center
     align-items: center
     background-color: $darkblue
-    img
-      width: 653px
+    .otp-cover-image,
+    .two-fa-cover-image
+      width: 770px
+      height: 652px
+    .signup-cover-image
+      width: 654px
       height: 652px
 </style>

@@ -27,10 +27,18 @@ class NoAuthApi extends BaseApi {
       const { status, data } = error.response
       switch (status) {
         // 500/404/403
+        case 400:
+          userStore.loading = false
+          userStore.error = (data as { message?: string })?.message
+          return Promise.reject(error)
         case 401:
           userStore.loading = false
           userStore.error = (data as { message?: string })?.message
           console.log(error);
+          return Promise.reject(error)
+        case 500:
+          userStore.loading = false
+          userStore.error = (data as { message?: string })?.message
           return Promise.reject(error)
         default:
           router.push({ name: 'ErrorPage' })

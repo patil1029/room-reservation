@@ -22,7 +22,7 @@ export type loginResponse = {
 }
 
 export type singupFirstStep = {
-  fullname: string,
+  fullName: string,
   email: string,
   password: string
 }
@@ -30,9 +30,8 @@ export type singupFirstStep = {
 export type signupFirstStepResponse = {
   status: number,
   data: {
-    id: 1,
+    id: number,
     qrCode: string
   },
   message: string
-
 }

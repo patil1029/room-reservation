@@ -33,31 +33,13 @@ const router = createRouter({
     },
     {
       path: '/auth/:slug',
-      name: 'signup',
+      name: 'auth',
       props: true,
       component: () => import('@/views/AuthView.vue'),
       meta: {
         requiresGuest: true
       }
     },
-    {
-      path: '/auth/:slug',
-      name: 'login',
-      props: true,
-      component: () => import('@/views/AuthView.vue'),
-      meta: {
-        requiresGuest: true
-      }
-    },
-    {
-      path: '/auth/:slug',
-      name: 'submitotp',
-      props: true,
-      component: () => import('@/views/AuthView.vue'),
-      meta: {
-        requiresGuest: true
-      }
-    }
   ],
 })
 

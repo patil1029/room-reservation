@@ -18,7 +18,9 @@ export const useUserStore = defineStore('userStore', {
     accessToken: '' as String | null,
     loading: false,
     error: '' as String | undefined,
-    tokenContent: {} as tokenContentType
+    tokenContent: {} as tokenContentType,
+    qrCode: '' as String,
+    tempSignUpData: {} as singupFirstStep
   }),
 
   actions: {
@@ -36,9 +38,13 @@ export const useUserStore = defineStore('userStore', {
     },
     async signupFirstStep(payload: singupFirstStep) {
       this.loading = true
-      this.error = ' error'
-      router.push('/auth/otp')
-      // this.loading = false
+      const { data: res } = await noAuthApi.signup(payload)
+
+      if (res.status === 201) {
+        this.tempSignUpData = payload
+        router.push('/auth/2fa')
+      }
+      this.loading = false
     },
 
     async setAccessToken(token: string) {
