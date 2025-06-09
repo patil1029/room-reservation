@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue'
 import BookingsListingTable from '@/components/BookingsListingTable.vue'
 import Button from '@/components/Button.vue'

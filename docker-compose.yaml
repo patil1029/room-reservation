@@ -4,7 +4,7 @@ services:
   frontend:
     image: node:20-alpine
     ports:
-      - '5173:5173' # Vite dev server
+      - '80:5173' # Vite dev server
     volumes:
       - .:/app # Bind mount your code
     working_dir: /app

@@ -24,9 +24,10 @@ export default defineConfig({
     },
   },
   server: {
+    port: 5173,
     proxy: {
       '/api': {
-        target: 'https://rr.dev.deploy.nl/api',
+        target: 'https://rr.dev.deploy.nl/v1',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       }

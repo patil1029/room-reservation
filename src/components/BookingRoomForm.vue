@@ -34,9 +34,9 @@ const handleBookRoom = () => {
       </div>
 
       <div class="date-time">
-        <InputBox v-model="date" label="Date" name="date" placeholder="DD/MMM/YYYY" />
-        <InputBox v-model="startTime" label="Start time" name="start-time" />
-        <InputBox v-model="endTime" label="End time" name="end-time" />
+        <InputBox :model-value="date" label="Date" name="date" placeholder="DD/MMM/YYYY" />
+        <InputBox :model-value="startTime" label="Start time" name="start-time" />
+        <InputBox :model-value="endTime" label="End time" name="end-time" />
       </div>
 
       <InputBox v-model="guest" label="Members / Guest" name="guest" />
@@ -64,8 +64,7 @@ const handleBookRoom = () => {
   background-color: #f9f9f9
   padding: 2rem
   border-radius: 10px
-  max-width: 1000px
-  margin: auto
+  margin: 0px 90px 0px 17px
   font-family: sans-serif
 
 form

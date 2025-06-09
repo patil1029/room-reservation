@@ -1,7 +1,8 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import router from '@/router';
-import type { tokenContentType } from "@/types";
+import type { loginPayload, singupFirstStep, tokenContentType } from "@/types";
+import noAuthApi from "@/api/NoAuth";
 
 const parseJwt = (token: string): tokenContentType => {
   try {
@@ -13,54 +14,46 @@ const parseJwt = (token: string): tokenContentType => {
 
 export const useUserStore = defineStore('userStore', {
   state: () => ({
+    tempAccessToken: '' as String | null,
     accessToken: '' as String | null,
     loading: false,
-    error: '' as String,
+    error: '' as String | undefined,
     tokenContent: {} as tokenContentType
   }),
 
   actions: {
-    async login(email: string, password: string) {
+    async login(payload: loginPayload) {
       this.loading = true
-      await axios.post(`api/auth/login`, {
-        "email": email,
-        "password": password
-      }, { withCredentials: true }).then((res) => {
-        if (res.status == 201) {
-          this.setAccessToken(res.data.token)
-          router.push({ name: 'home' })
-        }
-        this.loading = false
-      }
-      ).catch((res) => {
-        this.error = res.response.data.message
-      })
+      const { data: res } = await noAuthApi.login(payload)
 
+      if (res.status === 200) {
+        if (res.data.isTwoFAEnabled) {
+          this.tempAccessToken = res.data.accessToken
+          router.push('/otp')
+        }
+      }
       this.loading = false
     },
-    async Signup(name: string, email: string, password: string) {
+    async signupFirstStep(payload: singupFirstStep) {
       this.loading = true
-      await axios.post(`api/auth/register`, {
-        "name": name,
-        "email": email,
-        "password": password
-      }).then((res) => {
-        if (res.status == 201) {
-          router.push({ name: 'login' })
-        }
-        this.loading = false
-      }
-      ).catch((res) => {
-
-        this.error = res.response.data.message
-      })
-
-      this.loading = false
+      this.error = ' error'
+      router.push('/auth/otp')
+      // this.loading = false
     },
 
     async setAccessToken(token: string) {
       this.accessToken = token
       this.tokenContent = parseJwt(token)
+    },
+
+    async googleSSOLogin() {
+      try {
+        window.open('/api/auth/google-sso', '_self', 'noopener,noreferrer');
+      } catch (err: any) {
+        // logMessage(err.message || 'Login failed.', 'error');
+        throw new Error(err.message || 'Login failed.');
+
+      }
     },
 
     async refreshToken() {
